@@ -2,6 +2,16 @@
 Raspberry Pi kWh kernel module.
 
 
+## Build
+
+```sh
+export KERNEL_ROOT=<KERNEL-SRC-BASE-FOLDER>/linux
+```
+and
+
+```sh
+make
+```
 
 ## Usage
 

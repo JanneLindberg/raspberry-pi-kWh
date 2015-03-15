@@ -1,9 +1,32 @@
 # raspberry-pi-kWh
-Raspberry Pi kWh kernel module
+Raspberry Pi kWh kernel module.
+
+
 
 ## Usage
 
-## Build
+### Configuration
+
+One way to load the module when the system is started is to add the the command below into rc.local located in the /etc folder
+```sh
+/etc/rc.local
+/sbin/insmod /home/pi/powermod.ko
+```
+
+```sh
+#!/bin/bash
+
+data=$(cat /sys/kernel/power-mod/json_ev)
+host=<service-ip>
+port=<service-port>
+curl -v -H 'Accept: application/json' -H 'Content-Type: application/json' -d  @/sys/kernel/power-mod/json_ev -X POST http://${host}:${port}/data
+```
+
+To send the value to a central server/service at an regular interval, run the script above from the cron daemon.
+Add the entry below that will execute every minute.
+```sh
+* * * * * /home/pi/do_send_power > /dev/null 2>&1
+```
 
 ## License
 

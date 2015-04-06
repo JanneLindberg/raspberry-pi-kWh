@@ -1,0 +1,17 @@
+refdes	device	value	description	
+Q1	Photo Transistor	WP7113P3C	unknown	
+P1	RPi-B-r2-GPIO	unknown	Raspberry-Pi B rev2 GPIO	
+Q2	Transistor	BC548	unknown	
+U1	Optocoupler	6N138	Optocoupler/Optoisolator	
+J1	JUMPER	unknown	unknown	
+CONN2	CONNECTOR_3	unknown	generic connector	
+CONN1	CONNECTOR_3	unknown	generic connector	
+D1	LED	Yellow	unknown	
+R3	RESISTOR	2K2	unknown	
+R2	RESISTOR	10K	unknown	
+R1	RESISTOR	1K2	unknown	
+R7	RESISTOR	300	unknown	
+D2	LED	Yellow	unknown	
+R5	RESISTOR	47	unknown	
+R6	RESISTOR	10K	unknown	
+R4	RESISTOR	1K	unknown	

@@ -261,6 +261,7 @@ static ssize_t get_kilo_watt_hour(struct kobject *kobj, struct kobj_attribute *a
 static ssize_t set_kilo_watt_hour(struct kobject *kobj, struct kobj_attribute *attr, const char *buf, size_t count)
 {
     sscanf(buf, "%du", &kwh);
+    kwh_pulse_counter = 0;
     printk( "set kwh  = %d\n", kwh );
     return count;
 }

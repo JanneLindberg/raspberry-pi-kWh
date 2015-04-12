@@ -60,7 +60,7 @@ static int irq_counter = 0;
 static int pulses;
 static int watt;
 
-static char message_id[32] = "PWR";
+static char* device_id = "PWR";
 
 /*
  * Keep a count when we are missing pulses when there was expected to "be some".
@@ -93,9 +93,11 @@ MODULE_PARM_DESC(pulses_for_kwh, "Pulses for one kilowatt hour, default value 10
 module_param(gpio_pin, int, S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP);
 MODULE_PARM_DESC(gpio_pin, "gpio pin number");
 
+module_param(device_id, charp, S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP);
+MODULE_PARM_DESC(device_id, "Device id");
+
 
 static struct timer_list kwh_mod_timer;
-
 
 /*
  * IRQ service.
@@ -293,8 +295,7 @@ static struct kobj_attribute json_status_attribute = __ATTR(json, 0444, status_j
 
 /*
  * Return data in json format.
- * prepended with an timestamp consisting of unix time in seconds dot microseconds, kind of
- * redis compatible
+ * timestamp in milliseconds since epoc
  */
 static ssize_t status_ts_json(struct kobject *kobj, struct kobj_attribute *attr, char *buf)
 {
@@ -303,13 +304,14 @@ static ssize_t status_ts_json(struct kobject *kobj, struct kobj_attribute *attr,
 
     getnstimeofday(&ts);
 
-    i -= snprintf(buf + PAGE_SIZE - i, i, "{\"ts\":\"%u.%u\",\"id\":\"%s\",\"msg\":[",
-                  (unsigned int)ts.tv_sec, (unsigned int)(ts.tv_nsec / 1000),
-                  &message_id[0]);
-      i -= snprintf(buf + PAGE_SIZE - i, i, "{\"ws\":\"%d\",", watt);
-      i -= snprintf(buf + PAGE_SIZE - i, i, "\"kwh\":\"%d.%02d\",", kwh, kwh_pulse_counter);
-      i -= snprintf(buf + PAGE_SIZE - i, i, "\"fail\":\"%d\"}]}", pulse_fail());
-
+    i -= snprintf(buf + PAGE_SIZE - i, i, "[{\"timestamp\":\"%u%03u\",\"dev-id\":\"%s\",",
+                  (unsigned int)ts.tv_sec,
+                  ((unsigned int)ts.tv_nsec / 1000000L),
+                  &device_id[0]);
+    
+    i -= snprintf(buf + PAGE_SIZE - i, i, "\"watt\":\"%d\",\"kwh\":\"%d.%02d\",", watt, kwh, kwh_pulse_counter);
+    i -= snprintf(buf + PAGE_SIZE - i, i, "\"fail\":\"%d\"}]", pulse_fail());
+          
     return PAGE_SIZE - i;
 }
 
@@ -317,8 +319,7 @@ static struct kobj_attribute ts_json_status_attribute = __ATTR(json_ev, 0444, st
 
 
 /*
- * Create a group of attributes so that we can create and destroy them all
- * at once.
+ * Create a group of attributes so that we can create and destroy them all at once.
  */
 static struct kobj_attribute *attrs[] = {
 
@@ -358,7 +359,7 @@ static int __init power_mod_init(void)
     } else {
         mod_init_timer();
         module_init_irq();
-        printk ("loaded\n");
+        printk ("loaded: device-id=\"%s\", gpio_pin=%d\n", device_id, gpio_pin );
     }
 
     return retval;

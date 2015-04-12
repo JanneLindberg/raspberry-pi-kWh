@@ -54,7 +54,6 @@ static int gpio_irq_number;
 static int kwh = 0;
 static int kwh_pulse_counter;
 
-// Is this really used ??
 static int irq_counter = 0;
 
 static int pulses;
@@ -211,7 +210,6 @@ static void remove_timer(void)
 static ssize_t kilo_watt_hour(struct kobject *kobj, struct kobj_attribute *attr, char *buf)
 {
     ssize_t c = PAGE_SIZE;
-
     c -= snprintf(buf + PAGE_SIZE - c, c, "%d.%02d", kwh, kwh_pulse_counter);
     return PAGE_SIZE - c;
 }
@@ -285,7 +283,7 @@ static ssize_t status_json(struct kobject *kobj, struct kobj_attribute *attr, ch
 
     getnstimeofday(&ts);
 
-    i -= snprintf(buf + PAGE_SIZE - i, i, "{\"ws\":\"%d\",\"kwh\":\"%d.%02d\",\"fail\":\"%d\"}",
+    i -= snprintf(buf + PAGE_SIZE - i, i, "{\"watt\":\"%d\",\"kwh\":\"%d.%02d\",\"fail\":\"%d\"}",
                   watt, kwh, kwh_pulse_counter, pulse_fail());
 
     return PAGE_SIZE - i;

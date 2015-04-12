@@ -23,6 +23,8 @@ One way to load the module when the system is started is to add the the command 
 /sbin/insmod /home/pi/powermod.ko
 ```
 
+The device id in the message can be altered with an optional module paramter, Ex: device_id="main-pwr"
+
 ```sh
 #!/bin/bash
 

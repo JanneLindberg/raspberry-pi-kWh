@@ -308,8 +308,8 @@ static ssize_t status_ts_json(struct kobject *kobj, struct kobj_attribute *attr,
                   ((unsigned int)ts.tv_nsec / 1000000L),
                   &device_id[0]);
     
-    i -= snprintf(buf + PAGE_SIZE - i, i, "\"watt\":\"%d\",\"kwh\":\"%d.%02d\",", watt, kwh, kwh_pulse_counter);
-    i -= snprintf(buf + PAGE_SIZE - i, i, "\"fail\":\"%d\"}]", pulse_fail());
+    i -= snprintf(buf + PAGE_SIZE - i, i, "\"payload\":{\"watt\":\"%d\",\"kwh\":\"%d.%02d\",", watt, kwh, kwh_pulse_counter);
+    i -= snprintf(buf + PAGE_SIZE - i, i, "\"fail\":\"%d\"}}]", pulse_fail());
           
     return PAGE_SIZE - i;
 }
